@@ -15,7 +15,7 @@ class _VehicleSearchPageState extends State<VehicleSearchPage> {
   int selectedIndex = 0;
   String searchQuery = ''; 
 
-  List<String> categories = ["All", "Luxury", "SUV", "Economy"];
+  List<String> categories = ["All", "Luxury", "SUV", "Economy",];
 
   List<CarModel> carList = [
     CarModel(
@@ -224,7 +224,7 @@ class _VehicleSearchPageState extends State<VehicleSearchPage> {
                         ),
                         selected: selectedIndex == index,
                         selectedColor: Colors.blue,
-                        backgroundColor: Colors.grey.shade300,
+                        backgroundColor: AppColors.backGround1,
                         onSelected: (selected) {
                           setState(() {
                             selectedIndex = index;

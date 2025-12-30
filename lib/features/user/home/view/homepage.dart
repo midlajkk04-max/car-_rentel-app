@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/profile/view/profile.dart';
 import 'package:hive_project/features/user/vehicle_search/view/vehicle_search_page.dart';
+import 'package:hive_project/main.dart';
+import 'package:hive_project/features/user/auth/model/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,10 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-  
  
-
   final categories = [
     {'name': 'Luxury', 'icon': Icons.diamond, 'selected': false},
     {'name': 'SUV', 'icon': Icons.directions_car, 'selected': false},
@@ -43,7 +44,6 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // Header
             Text(
               'Find the perfect car',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -118,12 +118,7 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VehicleSearchPage(),
-                          ),
-                        );
+                        bottomBarKey.currentState?.changeIndex(1); 
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,

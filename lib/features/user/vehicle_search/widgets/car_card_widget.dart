@@ -146,8 +146,8 @@ class CarCardWidget extends StatelessWidget {
   Widget _feature(String text) {
     return Row(
       children: [
-        const Icon(Icons.check_circle, size: 16, color: Colors.grey),
-        const SizedBox(width: 4),
+         Icon(Icons.check_circle, size: 16, color: Colors.grey),
+         SizedBox(width: 4),
         Text(text, style: const TextStyle(color: Colors.grey)),
       ],
     );

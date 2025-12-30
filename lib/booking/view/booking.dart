@@ -13,7 +13,7 @@ class Bookingpage extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: Color(0xFF0F1B24),
-
+  
         title:  Text(
           "Booking Summary",
           style: TextStyle(color: Colors.white),

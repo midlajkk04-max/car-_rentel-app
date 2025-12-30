@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
+import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/bottam__navigationbar/bottom_bar.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
-import 'package:hive_project/features/user/auth/view/loginPage.dart';
-import 'package:hive_project/features/user/home/view/homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive_project/features/user/auth/register/view/register.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -13,28 +14,37 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+
   @override
   void initState() {
     super.initState();
     checkUser();
   }
-    Future<void> checkUser() async {
-      await Future.delayed(const Duration(seconds: 3));
-      final check = await SharedPreferences.getInstance();
-      final String? user = check.getString("user");
 
-      if (user == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Loginpage()),
-        );
-      }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomBar()));
-      }
-    }
+ void checkUser() async {
+  await Future.delayed(const Duration(seconds: 3));
 
- 
-  
+  if (!Hive.isBoxOpen('userBox')) {
+    await Hive.openBox<UserModel>('userBox');
+  }
+
+  final box = Hive.box<UserModel>('userBox');
+  final user = box.get('currentUser');
+
+  if (!mounted) return;
+
+  if (user != null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => BottomBar()),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => Registerpage()),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +56,9 @@ class _SplashState extends State<Splash> {
             colors: [AppColors.backGround, AppColors.backGround1],
           ),
         ),
-        child: Center(child: Image.asset('images/splash.png')),
+        child: Center(
+          child: Image.asset('images/splash.png'),
+        ),
       ),
     );
   }

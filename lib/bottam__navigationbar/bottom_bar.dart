@@ -4,15 +4,14 @@ import 'package:hive_project/features/user/home/view/homepage.dart';
 import 'package:hive_project/features/user/profile/view/profile.dart';
 import 'package:hive_project/features/user/vehicle_search/view/vehicle_search_page.dart';
 
-
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<BottomBar> createState() => BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class BottomBarState extends State<BottomBar> {
   int indexNum = 0;
 
   final List<Widget> tabWidgets = [
@@ -21,23 +20,25 @@ class _BottomBarState extends State<BottomBar> {
     Profile(),
   ];
 
+  
+  void changeIndex(int newIndex) {
+    setState(() {
+      indexNum = newIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: tabWidgets[indexNum],
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: indexNum,
+        onTap: changeIndex,
         showUnselectedLabels: true,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         backgroundColor: AppColors.backGround1,
-        onTap: (index) {
-          setState(() {
-            indexNum = index;
-          });
-        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

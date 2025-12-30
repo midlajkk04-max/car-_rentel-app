@@ -3,7 +3,7 @@ import 'package:hive_project/car_featurs/widget/car_features_widget.dart';
 import 'package:hive_project/car_featurs/widget/car_features_widget_container.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/vehicle_search/view/vehicle_search_page.dart';
-import 'package:horizontal_weekly_calendar/weekly_calendar.dart';
+
 
 class CarFeatures extends StatefulWidget {
   const CarFeatures({super.key});
@@ -21,10 +21,8 @@ class _CarFeaturesState extends State<CarFeatures> {
         backgroundColor: AppColors.backGround,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => VehicleSearchPage()),
-            );
+           
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
         ),
