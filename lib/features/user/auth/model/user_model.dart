@@ -14,9 +14,13 @@ class UserModel {
   @HiveField(2)
   String password;
 
+  @HiveField(3)
+  String?imagepath;
+
   UserModel({
     required this.name,
     required this.email,
     required this.password,
+    this.imagepath,
   });
 }

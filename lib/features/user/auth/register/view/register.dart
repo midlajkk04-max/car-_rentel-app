@@ -32,7 +32,7 @@ class _RegisterpageState extends State<Registerpage> {
             padding: const EdgeInsets.fromLTRB(20, 80, 20, 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children:  [
                 Text(
                   "Register",
                   style: TextStyle(
@@ -61,7 +61,7 @@ class _RegisterpageState extends State<Registerpage> {
                 ),
               ),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(30),
+                padding:  EdgeInsets.all(30),
                 child: Form(
                   key: formkey,
                   child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
+import 'package:hive_project/features/user/profile/view/person_information.dart';
 import 'package:hive_project/features/user/profile/widget/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,16 +25,9 @@ class _ProfileState extends State<Profile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 10),
-            Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage("images/profile.png"),
-              ),
-            ),
+           
             SizedBox(height: 15),
-            // Text(name,style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),),
-            // Text(name1),
+
             Row(
               children: [
                 Padding(
@@ -45,9 +39,14 @@ class _ProfileState extends State<Profile> {
                 ),
               ],
             ),
-            Profilecontainer(
-              icon: Icons.person_outlined,
-              text: "personal information",
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonInformation()));
+              },
+              child: Profilecontainer(
+                icon: Icons.person_outlined,
+                text: "personal information",
+              ),
             ),
             Profilecontainer(icon: Icons.history, text: "Rentel History"),
             Profilecontainer(icon: Icons.credit_card, text: "payment Methods"),
