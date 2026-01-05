@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:hive_project/bottam__navigationbar/bottom_bar.dart';
 import 'package:hive_project/common%20textfield/widget/commonfield.dart';
-import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/features/user/auth/register/view/register.dart';
+import 'package:hive_project/features/user/auth/service/user_service.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -20,8 +19,6 @@ class _LoginpageState extends State<Loginpage> {
 
   @override
   Widget build(BuildContext context) {
-    final Box<UserModel> userBox = Hive.box<UserModel>('userBox');
-
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       body: Column(
@@ -47,7 +44,6 @@ class _LoginpageState extends State<Loginpage> {
               ],
             ),
           ),
-
           Expanded(
             child: Container(
               width: double.infinity,
@@ -77,9 +73,7 @@ class _LoginpageState extends State<Loginpage> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 20),
-
                       Commonfield(
                         text: "Password",
                         hinttext: "Enter password",
@@ -93,9 +87,7 @@ class _LoginpageState extends State<Loginpage> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 60),
-
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -104,67 +96,48 @@ class _LoginpageState extends State<Loginpage> {
                             backgroundColor: Colors.blue,
                           ),
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                            
-                              UserModel? savedUser =
-                                  userBox.get('currentUser');
+                            if (!formKey.currentState!.validate()) return;
 
-                              if (savedUser == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text("No user found. Please register."),
-                                  ),
-                                );
-                                return;
-                              }
+                            final user = UserService.loginUser(
+                              email.text.trim(),
+                              password.text.trim(),
+                            );
 
-                            
-                              if (email.text == savedUser.email &&
-                                  password.text == savedUser.password) {
-                                // ✅ Login success
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BottomBar(),
-                                  ),
-                                );
-                              } else {
-                                // ❌ Wrong credentials
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text("Invalid email or password"),
-                                  ),
-                                );
-                              }
+                            if (user != null) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => BottomBar()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Invalid email or password"),
+                                ),
+                              );
                             }
                           },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: const Text("Login"),
                         ),
                       ),
-
-                       SizedBox(height: 25),
-
-                     Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 42),
-                          child: Row(
-                            
-                            children: [
-                              Text(
-                                "Don't have an account?",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              TextButton(onPressed: (){
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Registerpage()));
-                              }, child: Text("sign in"))
-                            ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account?",
+                            style: TextStyle(color: Colors.grey),
                           ),
-                        ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const Registerpage()),
+                              );
+                            },
+                            child: const Text("Register"),
+                          ),
+                        ],
                       ),
                     ],
                   ),

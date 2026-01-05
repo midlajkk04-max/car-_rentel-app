@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/features/user/auth/service/user_service.dart';
-import 'package:hive_project/features/user/profile/view/profile.dart';
-import 'package:hive_project/features/user/profile/widget/profile.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PersonInformation extends StatefulWidget {
@@ -19,18 +17,24 @@ class _PersonInformationState extends State<PersonInformation> {
   TextEditingController emailController = TextEditingController();
 
   UserModel? user;
+
   @override
   void initState() {
     super.initState();
-    user = UserService.getUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        user = UserService.getCurrentUser();
+      });
+    });
   }
 
-  
   Future<void> pickImage() async {
+    if (user == null) return;
+
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null && user != null) {
+    if (image != null) {
       UserModel updatedUser = UserModel(
         name: user!.name,
         email: user!.email,
@@ -38,7 +42,7 @@ class _PersonInformationState extends State<PersonInformation> {
         imagepath: image.path,
       );
 
-      await UserService.saveUser(updatedUser);
+      await UserService.updateCurrentUser(updatedUser);
 
       setState(() {
         user = updatedUser;
@@ -56,30 +60,22 @@ class _PersonInformationState extends State<PersonInformation> {
           title: const Text("Update name"),
           content: TextField(
             controller: namecontroller,
-            keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Enter new name"),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
             ElevatedButton(
               onPressed: () async {
                 if (user != null && namecontroller.text.isNotEmpty) {
                   UserModel updatedUser = UserModel(
-                    name: user!.name,
-                    email: namecontroller.text,
+                    name: namecontroller.text,
+                    email: user!.email,
                     password: user!.password,
                     imagepath: user!.imagepath,
                   );
 
-                  await UserService.saveUser(updatedUser);
-
-                  setState(() {
-                    user = updatedUser;
-                  });
-
+                  await UserService.updateCurrentUser(updatedUser);
+                  setState(() { user = updatedUser; });
                   Navigator.pop(context);
                 }
               },
@@ -101,14 +97,10 @@ class _PersonInformationState extends State<PersonInformation> {
           title: const Text("Update Email"),
           content: TextField(
             controller: emailController,
-            keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Enter new email"),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
             ElevatedButton(
               onPressed: () async {
                 if (user != null && emailController.text.isNotEmpty) {
@@ -119,12 +111,8 @@ class _PersonInformationState extends State<PersonInformation> {
                     imagepath: user!.imagepath,
                   );
 
-                  await UserService.saveUser(updatedUser);
-
-                  setState(() {
-                    user = updatedUser;
-                  });
-
+                  await UserService.updateCurrentUser(updatedUser);
+                  setState(() { user = updatedUser; });
                   Navigator.pop(context);
                 }
               },
@@ -139,12 +127,12 @@ class _PersonInformationState extends State<PersonInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: AppColors.backGround1),
-      backgroundColor: AppColors.backGround1,
+      appBar: AppBar(backgroundColor: AppColors.backGround),
+      backgroundColor: AppColors.backGround,
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: pickImage,
               child: CircleAvatar(
@@ -154,37 +142,24 @@ class _PersonInformationState extends State<PersonInformation> {
                     : const AssetImage("images/profile.png") as ImageProvider,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
-              "change photo",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: 10),
+            const SizedBox(height: 5),
+            const Text("change photo", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue)),
+            const SizedBox(height: 10),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 75),
+              padding: const EdgeInsets.symmetric(horizontal: 75),
               child: Row(
-                children: [
-                  Text(
-                    "Full Name",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
+                children: const [
+                  Text("Full Name", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
-           SizedBox(height: 12,),
+            const SizedBox(height: 12),
             Container(
               width: 300,
               child: ElevatedButton.icon(
                 onPressed: () => editname(context),
                 icon: const Icon(Icons.edit, size: 16),
-                label: Text(
-                  user?.name ?? "No name",
-                  style: const TextStyle(fontSize: 15),
-                ),
+                label: Text(user?.name ?? "No name", style: const TextStyle(fontSize: 15)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   foregroundColor: Colors.white,
@@ -197,16 +172,12 @@ class _PersonInformationState extends State<PersonInformation> {
                 ),
               ),
             ),
-            
-            SizedBox(height: 8,),
+            const SizedBox(height: 8),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 75,vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 5),
               child: Row(
-                children: [
-                  Text(
-                    "Email",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
+                children: const [
+                  Text("Email", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -215,10 +186,7 @@ class _PersonInformationState extends State<PersonInformation> {
               child: ElevatedButton.icon(
                 onPressed: () => editEmail(context),
                 icon: const Icon(Icons.edit, size: 16),
-                label: Text(
-                  user?.email ?? "No Email",
-                  style: const TextStyle(fontSize: 15),
-                ),
+                label: Text(user?.email ?? "No Email", style: const TextStyle(fontSize: 15)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   foregroundColor: Colors.white,

@@ -1,82 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:hive_project/booking/view/booking.dart';
 import 'package:hive_project/car_featurs/view/car_features.dart';
+import 'package:hive_project/favorite/service/favorite_service.dart';
+import 'package:hive_project/features/user/auth/service/user_service.dart';
+import 'package:hive_project/features/user/vehicle_search/model/car_card_model.dart';
 
-class CarCardWidget extends StatelessWidget {
-  final String images;
-  final String name;
-  final String details;
-  final String price;
-  final String raiting;
-  final String features1;
-  final String features2;
-  final String features3;
-  final VoidCallback onBook;
-  const CarCardWidget({
-    super.key,
-    required this.images,
-    required this.name,
-    required this.details,
-    required this.price,
-    required this.raiting,
-    required this.features1,
-    required this.features2,
-    required this.features3,
-    required this.onBook,
-  });
+class CarCardWidget extends StatefulWidget {
+  final CarModel car;
+  const CarCardWidget({super.key, required this.car});
+
+  @override
+  State<CarCardWidget> createState() => _CarCardWidgetState();
+}
+
+class _CarCardWidgetState extends State<CarCardWidget> {
+  bool isFav = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFav = FavoriteService.isFavorite(widget.car);
+  }
+
+  void toggleFavorite() async {
+    if (isFav) {
+      await FavoriteService.removeFavorite(widget.car.name);
+    } else {
+      await FavoriteService.addFavorite(widget.car);
+    }
+    setState(() => isFav = !isFav);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:  EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color:  Color(0xFF1C2630),
+        color: const Color(0xFF1C2630),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
           Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                child: GestureDetector(onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CarFeatures()));
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CarFeatures(car: widget.car),
+                    ),
+                  );
                 },
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
                   child: Image.network(
-                    images,
+                    widget.car.image[0],
                     height: 180,
                     width: double.infinity,
-                  
                     fit: BoxFit.cover,
-                   
-                    
                   ),
                 ),
               ),
               Positioned(
                 top: 10,
                 right: 10,
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(12),
+                child: IconButton(
+                  icon: Icon(
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        raiting.toString(),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+                  onPressed: toggleFavorite,
                 ),
               ),
             ],
           ),
-
           Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -86,7 +85,7 @@ class CarCardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      name,
+                      widget.car.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -94,44 +93,39 @@ class CarCardWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      price,
+                      widget.car.price,
                       style: const TextStyle(
                         color: Colors.blue,
-                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 4),
-                Text(details, style: const TextStyle(color: Colors.grey)),
-
-                const SizedBox(height: 10),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _feature(features1),
-                    _feature(features2),
-                    _feature(features3),
-                  ],
+                Text(
+                  widget.car.details,
+                  style: const TextStyle(color: Colors.grey),
                 ),
-
-                const SizedBox(height: 14),
-
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Bookingpage()));
+                    onPressed: () {
+                      final user = UserService.getCurrentUser();
+                      if (user == null) return;
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BookingPage(
+                            carName: widget.car.name,
+                            carImage: widget.car.image[0],
+                            carPrice: widget.car.price,
+                            userId: user.email, 
+                          ),
+                        ),
+                      );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
                     child: const Text("Book Now"),
                   ),
                 ),
@@ -140,16 +134,6 @@ class CarCardWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _feature(String text) {
-    return Row(
-      children: [
-         Icon(Icons.check_circle, size: 16, color: Colors.grey),
-         SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.grey)),
-      ],
     );
   }
 }

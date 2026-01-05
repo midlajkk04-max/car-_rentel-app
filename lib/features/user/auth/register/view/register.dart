@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive_project/bottam__navigationbar/bottom_bar.dart';
 import 'package:hive_project/common%20textfield/widget/commonfield.dart';
 import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
 import 'package:hive_project/features/user/auth/model/user_model.dart';
-import 'package:hive_project/features/user/home/view/homepage.dart';
+import 'package:hive_project/features/user/auth/service/user_service.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -14,13 +12,11 @@ class Registerpage extends StatefulWidget {
 }
 
 class _RegisterpageState extends State<Registerpage> {
-  TextEditingController username = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  final username = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   final formkey = GlobalKey<FormState>();
-
-  final Box<UserModel> userBox = Hive.box<UserModel>('userBox');
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class _RegisterpageState extends State<Registerpage> {
             padding: const EdgeInsets.fromLTRB(20, 80, 20, 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: const [
                 Text(
                   "Register",
                   style: TextStyle(
@@ -49,7 +45,6 @@ class _RegisterpageState extends State<Registerpage> {
               ],
             ),
           ),
-
           Expanded(
             child: Container(
               width: double.infinity,
@@ -61,7 +56,7 @@ class _RegisterpageState extends State<Registerpage> {
                 ),
               ),
               child: SingleChildScrollView(
-                padding:  EdgeInsets.all(30),
+                padding: const EdgeInsets.all(30),
                 child: Form(
                   key: formkey,
                   child: Column(
@@ -77,9 +72,7 @@ class _RegisterpageState extends State<Registerpage> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 10),
-
                       Commonfield(
                         text: "Email",
                         hinttext: "Enter email",
@@ -93,9 +86,7 @@ class _RegisterpageState extends State<Registerpage> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 10),
-
                       Commonfield(
                         text: "Password",
                         hinttext: "Enter password",
@@ -109,9 +100,7 @@ class _RegisterpageState extends State<Registerpage> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 50),
-
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -120,45 +109,53 @@ class _RegisterpageState extends State<Registerpage> {
                             backgroundColor: Colors.blue,
                           ),
                           onPressed: () async {
-                            if (formkey.currentState!.validate()) {
-                              UserModel user = UserModel(
-                                name: username.text,
-                                email: email.text,
-                                password: password.text,
-                              );
+                            if (!formkey.currentState!.validate()) return;
 
-                  
-                              await userBox.put('currentUser', user);
+                            final user = UserModel(
+                              name: username.text,
+                              email: email.text,
+                              password: password.text,
+                            );
 
+                            final error =
+                                await UserService.registerUser(user);
+
+                            if (error != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Registration Successful"),
-                                ),
+                                SnackBar(content: Text(error)),
                               );
+                              return;
+                            }
 
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const Loginpage()),
+                            );
+                          },
+                          child: const Text("Register"),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already have an account?",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          TextButton(
+                            onPressed: () {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BottomBar(),
-                                ),
+                                    builder: (_) => const Loginpage()),
                               );
-                            }
-                          },
-                          child: const Text(
-                            "Register",
-                            style: TextStyle(color: Colors.white),
+                            },
+                            child: const Text("Login"),
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      const Center(
-                        child: Text(
-                          "Already have an account?",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ),
+                        ],
+                      )
                     ],
                   ),
                 ),

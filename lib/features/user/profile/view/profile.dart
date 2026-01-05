@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
+import 'package:hive_project/features/user/auth/service/user_service.dart';
 import 'package:hive_project/features/user/profile/view/person_information.dart';
 import 'package:hive_project/features/user/profile/widget/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,6 @@ class _ProfileState extends State<Profile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-           
             SizedBox(height: 15),
 
             Row(
@@ -41,7 +41,10 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonInformation()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PersonInformation()),
+                );
               },
               child: Profilecontainer(
                 icon: Icons.person_outlined,
@@ -69,12 +72,16 @@ class _ProfileState extends State<Profile> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
+                onPressed: () async {
+                  await UserService.logout();
+
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => Loginpage()),
+                    MaterialPageRoute(builder: (_) => Loginpage()),
+                    (route) => false,
                   );
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 244, 21, 5),
                   minimumSize: Size(double.infinity, 50),

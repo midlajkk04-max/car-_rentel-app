@@ -5,6 +5,7 @@ import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/bottam__navigationbar/bottom_bar.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/register/view/register.dart';
+import 'package:hive_project/features/user/auth/service/user_service.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -24,12 +25,7 @@ class _SplashState extends State<Splash> {
  void checkUser() async {
   await Future.delayed(const Duration(seconds: 3));
 
-  if (!Hive.isBoxOpen('userBox')) {
-    await Hive.openBox<UserModel>('userBox');
-  }
-
-  final box = Hive.box<UserModel>('userBox');
-  final user = box.get('currentUser');
+  final user = UserService.getCurrentUser();
 
   if (!mounted) return;
 
@@ -41,7 +37,7 @@ class _SplashState extends State<Splash> {
   } else {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => Registerpage()),
+      MaterialPageRoute(builder: (_) => Loginpage()),
     );
   }
 }
