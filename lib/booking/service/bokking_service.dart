@@ -4,11 +4,21 @@ import '../model/booking_model.dart';
 class BookingService {
   static final Box _box = Hive.box('bookingBox');
 
-  
-  static Future<void> saveBooking(BookingModel booking) async {
+
+  static Future<bool> saveBooking(BookingModel booking) async {
     final List stored = _box.get('bookings', defaultValue: []);
+
+    final alreadyBooked = stored.any((e) =>
+        e['userId'] == booking.userId &&
+        e['carName'] == booking.carName);
+
+    if (alreadyBooked) {
+      return false; 
+    }
+
     stored.add(booking.toMap());
     await _box.put('bookings', stored);
+    return true; 
   }
 
   

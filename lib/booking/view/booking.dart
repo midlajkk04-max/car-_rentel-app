@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_project/booking/service/bokking_service.dart';
+import 'package:hive_project/booking/view/booking_succespage.dart';
 import '../model/booking_model.dart';
-import '../service/bokking_service.dart';
 
 class BookingPage extends StatelessWidget {
   final String carName;
@@ -29,7 +30,6 @@ class BookingPage extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-      
             ClipRRect(
               borderRadius: BorderRadius.circular(18),
               child: Image.network(
@@ -42,7 +42,6 @@ class BookingPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-          
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
@@ -55,12 +54,8 @@ class BookingPage extends StatelessWidget {
                   _row("Price / day", carPrice),
                   _row("Days", "3"),
                   const Divider(color: Colors.grey),
-                  _row(
-                    "Total",
-                    carPrice,
-                    bold: true,
-                    color: Colors.blueAccent,
-                  ),
+                  _row("Total", carPrice,
+                      bold: true, color: Colors.blueAccent),
                 ],
               ),
             ),
@@ -73,7 +68,8 @@ class BookingPage extends StatelessWidget {
                 backgroundColor: Colors.blueAccent,
                 minimumSize: const Size(double.infinity, 55),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               onPressed: () async {
                 BookingModel booking = BookingModel(
@@ -86,10 +82,29 @@ class BookingPage extends StatelessWidget {
                   totalAmount: carPrice,
                 );
 
-                await BookingService.saveBooking(booking);
+                final success =
+                    await BookingService.saveBooking(booking);
 
                 if (!context.mounted) return;
-                Navigator.pop(context, true);
+
+              
+                if (!success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("You already booked this car"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+              
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const BookingSuccessPage(),
+                  ),
+                );
               },
               child: const Text(
                 "Confirm Booking",

@@ -20,7 +20,7 @@ class _CarFeaturesState extends State<CarFeatures> {
       backgroundColor: const Color(0xFF0F1B24),
       body: Column(
         children: [
-          // 🔹 IMAGE SLIDER
+      
           Stack(
             children: [
               SizedBox(
@@ -40,7 +40,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                 ),
               ),
 
-              // 🔙 BACK BUTTON
+              
               Positioned(
                 top: 40,
                 left: 12,
@@ -50,7 +50,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                 ),
               ),
 
-              // 🔘 INDICATORS
+            
               Positioned(
                 bottom: 12,
                 left: 0,
@@ -77,7 +77,7 @@ class _CarFeaturesState extends State<CarFeatures> {
             ],
           ),
 
-          // 🔹 CONTENT
+      
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
@@ -88,7 +88,7 @@ class _CarFeaturesState extends State<CarFeatures> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 🔹 TITLE
+                
                   Text(
                     widget.car.name,
                     style: const TextStyle(
@@ -105,7 +105,7 @@ class _CarFeaturesState extends State<CarFeatures> {
 
                   const SizedBox(height: 20),
 
-                  // 🔹 FEATURES
+          
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
@@ -135,7 +135,7 @@ class _CarFeaturesState extends State<CarFeatures> {
 
                   const Spacer(),
 
-                  // 🔹 PRICE + BOOK
+                
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

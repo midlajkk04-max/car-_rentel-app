@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_project/bottam__navigationbar/bottom_bar.dart';
 import 'package:hive_project/common%20textfield/widget/commonfield.dart';
+import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/register/view/register.dart';
 import 'package:hive_project/features/user/auth/service/user_service.dart';
 
@@ -20,7 +21,7 @@ class _LoginpageState extends State<Loginpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: AppColors.backGround,
       body: Column(
         children: [
           Padding(
@@ -48,7 +49,7 @@ class _LoginpageState extends State<Loginpage> {
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 49, 63, 76),
+                color: Color.fromARGB(255, 35, 44, 52),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(60),
                   topRight: Radius.circular(60),

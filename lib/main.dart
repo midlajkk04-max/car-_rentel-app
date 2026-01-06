@@ -11,11 +11,10 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
 
-  await Hive.openBox<UserModel>('userBox');
+await Hive.openBox<UserModel>('userBox');
 await Hive.openBox('appBox');
 await Hive.openBox('bookingBox');
 await Hive.openBox('favoriteBox'); 
-
 
 
   runApp(const MyApp());

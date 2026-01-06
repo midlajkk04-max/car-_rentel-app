@@ -126,7 +126,7 @@ class _CarCardWidgetState extends State<CarCardWidget> {
                         ),
                       );
                     },
-                    child: const Text("Book Now"),
+                    child:  Text("Book Now"),
                   ),
                 ),
               ],

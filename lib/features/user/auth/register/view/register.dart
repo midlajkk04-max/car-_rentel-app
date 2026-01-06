@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_project/common%20textfield/widget/commonfield.dart';
+import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
 import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/features/user/auth/service/user_service.dart';
@@ -21,7 +22,7 @@ class _RegisterpageState extends State<Registerpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: AppColors.backGround,
       body: Column(
         children: [
           Padding(
@@ -49,7 +50,7 @@ class _RegisterpageState extends State<Registerpage> {
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 49, 63, 76),
+                 color: Color.fromARGB(255, 35, 44, 52),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(60),
                   topRight: Radius.circular(60),
