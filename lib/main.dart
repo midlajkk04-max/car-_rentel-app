@@ -15,7 +15,7 @@ await Hive.openBox<UserModel>('userBox');
 await Hive.openBox('appBox');
 await Hive.openBox('bookingBox');
 await Hive.openBox('favoriteBox'); 
-
+await Hive.openBox('documentsBox');
 
   runApp(const MyApp());
 }

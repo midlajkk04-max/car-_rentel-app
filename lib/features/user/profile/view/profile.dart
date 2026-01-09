@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/auth/login/view/loginPage.dart';
 import 'package:hive_project/features/user/auth/service/user_service.dart';
+import 'package:hive_project/features/user/profile/view/driving%20licenceuplod.dart';
 import 'package:hive_project/features/user/profile/view/person_information.dart';
 import 'package:hive_project/features/user/profile/widget/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,12 @@ class _ProfileState extends State<Profile> {
             ),
             Profilecontainer(icon: Icons.history, text: "Rentel History"),
             Profilecontainer(icon: Icons.credit_card, text: "payment Methods"),
-            Profilecontainer(icon: Icons.badge, text: "Driver's License"),
+
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadDocumentsPage()));
+              },
+              child: Profilecontainer(icon: Icons.badge, text: "Driver's License")),
 
             Row(
               children: [
