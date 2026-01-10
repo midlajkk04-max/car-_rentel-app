@@ -2,23 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:hive_project/booking/service/bokking_service.dart';
 import 'package:hive_project/booking/view/booking_succespage.dart';
 import '../model/booking_model.dart';
+import '../../features/user/auth/service/user_service.dart';
 
 class BookingPage extends StatelessWidget {
   final String carName;
   final String carImage;
   final String carPrice;
-  final String userId;
 
   const BookingPage({
     super.key,
     required this.carName,
     required this.carImage,
-    required this.carPrice,
-    required this.userId,
+    required this.carPrice, required String userId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final user = UserService.getCurrentUser();
+    if (user == null) {
+      return const Scaffold(
+        body: Center(child: Text("No user found")),
+      );
+    }
+
     final int pricePerDay =
         int.tryParse(carPrice.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
     const int days = 3;
@@ -68,9 +74,16 @@ class BookingPage extends StatelessWidget {
             ),
             const Spacer(),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                minimumSize: Size.fromHeight(50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)
+                )
+              ),
               onPressed: () async {
                 final booking = BookingModel(
-                  userId: userId,
+                  userId: user.id,
                   carName: carName,
                   carImage: carImage,
                   carPrice: pricePerDay,
@@ -96,7 +109,9 @@ class BookingPage extends StatelessWidget {
                 
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const BookingSuccessPage()),
+                  MaterialPageRoute(
+                    builder: (_) => const BookingSuccessPage(),
+                  ),
                 );
               },
               child: const Text("Confirm Booking"),

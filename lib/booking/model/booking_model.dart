@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'booking_model.g.dart';
 
-@HiveType(typeId: 2) 
+@HiveType(typeId: 2)
 class BookingModel {
   @HiveField(0)
   final String userId;

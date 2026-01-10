@@ -9,13 +9,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  // ✅ Register adapters safely
+  
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(UserModelAdapter());
   if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(BookingModelAdapter());
 
-  // ✅ Open boxes
+  
   await Hive.openBox<UserModel>('userBox');
-  await Hive.openBox<BookingModel>('bookingBox'); // must match the box you use
+  await Hive.openBox<BookingModel>('bookingBox');
   await Hive.openBox('appBox');
   await Hive.openBox('favoriteBox');
   await Hive.openBox('documentsBox');

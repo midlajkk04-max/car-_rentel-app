@@ -2,16 +2,16 @@ import 'package:hive/hive.dart';
 import '../model/booking_model.dart';
 
 class BookingService {
-  static final Box<BookingModel> bookingBox = Hive.box<BookingModel>('bookingBox');
+  static final Box<BookingModel> bookingBox =
+      Hive.box<BookingModel>('bookingBox');
 
   static Future<bool> saveBooking(BookingModel booking) async {
-    
     final exists = bookingBox.values.any(
       (b) => b.userId == booking.userId && b.carName == booking.carName,
     );
     if (exists) return false;
 
-    await bookingBox.add(booking); 
+    await bookingBox.add(booking);
     return true;
   }
 

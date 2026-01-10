@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_project/core/constants/app_colors.dart';
+import '../../bottam__navigationbar/bottom_bar.dart';
+import '../../core/constants/app_colors.dart';
 
 class BookingSuccessPage extends StatelessWidget {
   const BookingSuccessPage({super.key});
@@ -27,10 +28,8 @@ class BookingSuccessPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-
-              
               const Text(
-                "Reserve Successful!",
+                "Reservation Successful!",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -40,7 +39,7 @@ class BookingSuccessPage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  "Reservation successful! Thank you. We look forward to seeing you!",
+                  "Your booking is confirmed! Thank you for reserving. We look forward to seeing you.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -49,16 +48,19 @@ class BookingSuccessPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-
-            
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.popUntil(
-                            context, (route) => route.isFirst);
+                        // ✅ Go back to BottomBar/Home
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BottomBar()),
+                          (route) => false,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
