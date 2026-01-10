@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_project/booking/model/booking_model.dart';
 import 'package:hive_project/features/user/auth/model/user_model.dart';
 import 'package:hive_project/features/user/splash/view/splash.dart';
-import 'package:hive_project/booking/service/bokking_service.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Hive.initFlutter();
-  Hive.registerAdapter(UserModelAdapter());
 
-await Hive.openBox<UserModel>('userBox');
-await Hive.openBox('appBox');
-await Hive.openBox('bookingBox');
-await Hive.openBox('favoriteBox'); 
-await Hive.openBox('documentsBox');
+  // ✅ Register adapters safely
+  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(UserModelAdapter());
+  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(BookingModelAdapter());
+
+  // ✅ Open boxes
+  await Hive.openBox<UserModel>('userBox');
+  await Hive.openBox<BookingModel>('bookingBox'); // must match the box you use
+  await Hive.openBox('appBox');
+  await Hive.openBox('favoriteBox');
+  await Hive.openBox('documentsBox');
 
   runApp(const MyApp());
 }

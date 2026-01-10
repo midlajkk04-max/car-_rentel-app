@@ -19,6 +19,11 @@ class BookingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int pricePerDay =
+        int.tryParse(carPrice.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    const int days = 3;
+    final int total = pricePerDay * days;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F1B24),
       appBar: AppBar(
@@ -39,9 +44,7 @@ class BookingPage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-
             const SizedBox(height: 20),
-
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
@@ -51,74 +54,65 @@ class BookingPage extends StatelessWidget {
               child: Column(
                 children: [
                   _row("Car", carName),
-                  _row("Price / day", carPrice),
-                  _row("Days", "3"),
+                  _row("Price / day", "₹$pricePerDay"),
+                  _row("Days", "$days"),
                   const Divider(color: Colors.grey),
-                  _row("Total", carPrice,
-                      bold: true, color: Colors.blueAccent),
+                  _row(
+                    "Total",
+                    "₹$total",
+                    bold: true,
+                    color: Colors.blueAccent,
+                  ),
                 ],
               ),
             ),
-
             const Spacer(),
-
-          
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                minimumSize: const Size(double.infinity, 55),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
               onPressed: () async {
-                BookingModel booking = BookingModel(
+                final booking = BookingModel(
                   userId: userId,
                   carName: carName,
                   carImage: carImage,
-                  carPrice: carPrice,
-                  bookingDate: DateTime.now().toString(),
-                  days: 3,
-                  totalAmount: carPrice,
+                  carPrice: pricePerDay,
+                  bookingDate: DateTime.now().toIso8601String(),
+                  days: days,
+                  totalAmount: total,
                 );
 
-                final success =
-                    await BookingService.saveBooking(booking);
+                final success = await BookingService.saveBooking(booking);
 
                 if (!context.mounted) return;
 
-              
                 if (!success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("You already booked this car"),
+                      content: Text("Already booked"),
                       backgroundColor: Colors.red,
                     ),
                   );
                   return;
                 }
 
-              
+                
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const BookingSuccessPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const BookingSuccessPage()),
                 );
               },
-              child: const Text(
-                "Confirm Booking",
-                style: TextStyle(fontSize: 16),
-              ),
-            )
+              child: const Text("Confirm Booking"),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _row(String title, String value,
-      {bool bold = false, Color color = Colors.white}) {
+  Widget _row(
+    String title,
+    String value, {
+    bool bold = false,
+    Color color = Colors.white,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(

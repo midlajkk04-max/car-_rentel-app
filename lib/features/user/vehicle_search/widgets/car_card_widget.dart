@@ -33,6 +33,10 @@ class _CarCardWidgetState extends State<CarCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = widget.car.image.isNotEmpty
+        ? widget.car.image.first
+        : 'https://via.placeholder.com/400';
+
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -53,10 +57,11 @@ class _CarCardWidgetState extends State<CarCardWidget> {
                   );
                 },
                 child: ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                   child: Image.network(
-                    widget.car.image[0],
+                    imageUrl,
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -112,21 +117,27 @@ class _CarCardWidgetState extends State<CarCardWidget> {
                   child: ElevatedButton(
                     onPressed: () {
                       final user = UserService.getCurrentUser();
-                      if (user == null) return;
+
+                      if (user == null || user.email == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please login again")),
+                        );
+                        return;
+                      }
 
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => BookingPage(
                             carName: widget.car.name,
-                            carImage: widget.car.image[0],
+                            carImage: imageUrl,
                             carPrice: widget.car.price,
-                            userId: user.email, 
+                            userId: user.email!,
                           ),
                         ),
                       );
                     },
-                    child:  Text("Book Now"),
+                    child: const Text("Book Now"),
                   ),
                 ),
               ],

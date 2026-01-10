@@ -29,8 +29,9 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
   }
 
   Future<void> pickFile(bool isFront) async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
 
     if (result != null && result.files.single.path != null) {
       final path = result.files.single.path!;
@@ -78,8 +79,7 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
               top: 12,
               right: 12,
               child: IconButton(
-                icon: const Icon(Icons.close,
-                    color: Colors.white, size: 30),
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
                 onPressed: () => Navigator.pop(context),
               ),
             ),
@@ -94,13 +94,10 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
       children: [
         Text(
           title,
-          style: const TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const Spacer(),
-        if (done)
-          const Icon(Icons.check_circle,
-              color: Colors.green, size: 20),
+        if (done) const Icon(Icons.check_circle, color: Colors.green, size: 20),
       ],
     );
   }
@@ -125,15 +122,19 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
                 color: Colors.blue.shade50,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.upload_file,
-                  size: 30, color: Colors.blue),
+              child: const Icon(
+                Icons.upload_file,
+                size: 30,
+                color: Colors.blue,
+              ),
             ),
             const SizedBox(height: 12),
-            const Text("Tap to upload",
-                style: TextStyle(fontWeight: FontWeight.w500)),
+            const Text(
+              "Tap to upload",
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 4),
-            const Text("JPG / PNG",
-                style: TextStyle(color: Colors.grey)),
+            const Text("JPG / PNG", style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),
@@ -154,19 +155,14 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
               color: Colors.black.withOpacity(.06),
               blurRadius: 10,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Row(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.file(
-                file,
-                width: 55,
-                height: 55,
-                fit: BoxFit.cover,
-              ),
+              child: Image.file(file, width: 55, height: 55, fit: BoxFit.cover),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -179,16 +175,17 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
-                  const Text("Uploaded",
-                      style:
-                          TextStyle(color: Colors.green, fontSize: 13)),
+                  const Text(
+                    "Uploaded",
+                    style: TextStyle(color: Colors.green, fontSize: 13),
+                  ),
                 ],
               ),
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.red),
               onPressed: onDelete,
-            )
+            ),
           ],
         ),
       ),
@@ -199,12 +196,8 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backGround,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.backGround,
-      ),
+      appBar: AppBar(elevation: 0, backgroundColor: AppColors.backGround),
 
-  
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
         child: Column(
@@ -213,8 +206,7 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
             const Center(
               child: Text(
                 "Verify your Identity",
-                style:
-                    TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 6),
@@ -224,28 +216,23 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
             ),
             const SizedBox(height: 28),
 
-            sectionTitle(
-                "Front of Driver’s License", frontLicense != null),
+            sectionTitle("Front of Driver’s License", frontLicense != null),
             const SizedBox(height: 12),
             frontLicense == null
                 ? uploadBox(() => pickFile(true))
-                : uploadedCard(
-                    frontLicense!, () => deleteFile(true)),
+                : uploadedCard(frontLicense!, () => deleteFile(true)),
 
             const SizedBox(height: 28),
 
-            sectionTitle(
-                "Back of Driver’s License", backLicense != null),
+            sectionTitle("Back of Driver’s License", backLicense != null),
             const SizedBox(height: 12),
             backLicense == null
                 ? uploadBox(() => pickFile(false))
-                : uploadedCard(
-                    backLicense!, () => deleteFile(false)),
+                : uploadedCard(backLicense!, () => deleteFile(false)),
           ],
         ),
       ),
 
-    
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: SizedBox(
@@ -263,15 +250,15 @@ class _UploadDocumentsPageState extends State<UploadDocumentsPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                            "Driving License Uploaded Successfully ✅"),
+                          "Driving License Uploaded Successfully ✅",
+                        ),
                         backgroundColor: Colors.green,
                       ),
                     );
 
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(
-                          builder: (_) => const BottomBar()),
+                      MaterialPageRoute(builder: (_) => const BottomBar()),
                     );
                   }
                 : null,

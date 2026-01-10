@@ -6,8 +6,7 @@ class FavoriteService {
   static final Box _box = Hive.box('favoriteBox');
 
   static String _userKey() {
-    final user = UserService.getCurrentUser();
-    return user!.email;
+    return UserService.getCurrentUser()!.id;
   }
 
   static List<CarModel> getFavorites() {
@@ -24,7 +23,6 @@ class FavoriteService {
 
   static Future<void> addFavorite(CarModel car) async {
     final List stored = _box.get(_userKey(), defaultValue: []);
-
     if (!stored.any((e) => e['name'] == car.name)) {
       stored.add(car.toMap());
       await _box.put(_userKey(), stored);

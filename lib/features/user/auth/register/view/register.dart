@@ -113,6 +113,7 @@ class _RegisterpageState extends State<Registerpage> {
                             if (!formkey.currentState!.validate()) return;
 
                             final user = UserModel(
+                              id: DateTime.now().millisecondsSinceEpoch.toString(), 
                               name: username.text,
                               email: email.text,
                               password: password.text,

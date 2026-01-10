@@ -36,6 +36,7 @@ class _PersonInformationState extends State<PersonInformation> {
 
     if (image != null) {
       UserModel updatedUser = UserModel(
+        id: user!.id,
         name: user!.name,
         email: user!.email,
         password: user!.password,
@@ -63,11 +64,15 @@ class _PersonInformationState extends State<PersonInformation> {
             decoration: const InputDecoration(hintText: "Enter new name"),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
             ElevatedButton(
               onPressed: () async {
                 if (user != null && namecontroller.text.isNotEmpty) {
                   UserModel updatedUser = UserModel(
+                    id: user!.id,
                     name: namecontroller.text,
                     email: user!.email,
                     password: user!.password,
@@ -75,7 +80,9 @@ class _PersonInformationState extends State<PersonInformation> {
                   );
 
                   await UserService.updateCurrentUser(updatedUser);
-                  setState(() { user = updatedUser; });
+                  setState(() {
+                    user = updatedUser;
+                  });
                   Navigator.pop(context);
                 }
               },
@@ -100,11 +107,15 @@ class _PersonInformationState extends State<PersonInformation> {
             decoration: const InputDecoration(hintText: "Enter new email"),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
             ElevatedButton(
               onPressed: () async {
                 if (user != null && emailController.text.isNotEmpty) {
                   UserModel updatedUser = UserModel(
+                    id: user!.id,
                     name: user!.name,
                     email: emailController.text,
                     password: user!.password,
@@ -112,7 +123,9 @@ class _PersonInformationState extends State<PersonInformation> {
                   );
 
                   await UserService.updateCurrentUser(updatedUser);
-                  setState(() { user = updatedUser; });
+                  setState(() {
+                    user = updatedUser;
+                  });
                   Navigator.pop(context);
                 }
               },
@@ -143,13 +156,23 @@ class _PersonInformationState extends State<PersonInformation> {
               ),
             ),
             const SizedBox(height: 5),
-            const Text("change photo", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue)),
+            const Text(
+              "change photo",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 75),
               child: Row(
                 children: const [
-                  Text("Full Name", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Full Name",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),
@@ -159,7 +182,10 @@ class _PersonInformationState extends State<PersonInformation> {
               child: ElevatedButton.icon(
                 onPressed: () => editname(context),
                 icon: const Icon(Icons.edit, size: 16),
-                label: Text(user?.name ?? "No name", style: const TextStyle(fontSize: 15)),
+                label: Text(
+                  user?.name ?? "No name",
+                  style: const TextStyle(fontSize: 15),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   foregroundColor: Colors.white,
@@ -177,7 +203,10 @@ class _PersonInformationState extends State<PersonInformation> {
               padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 5),
               child: Row(
                 children: const [
-                  Text("Email", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Email",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),
@@ -186,7 +215,10 @@ class _PersonInformationState extends State<PersonInformation> {
               child: ElevatedButton.icon(
                 onPressed: () => editEmail(context),
                 icon: const Icon(Icons.edit, size: 16),
-                label: Text(user?.email ?? "No Email", style: const TextStyle(fontSize: 15)),
+                label: Text(
+                  user?.email ?? "No Email",
+                  style: const TextStyle(fontSize: 15),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   foregroundColor: Colors.white,

@@ -16,31 +16,34 @@ class _CarFeaturesState extends State<CarFeatures> {
 
   @override
   Widget build(BuildContext context) {
+    final images = widget.car.image;
+
+    final imageList = images.isNotEmpty
+        ? images
+        : ['https://via.placeholder.com/400'];
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F1B24),
       body: Column(
         children: [
-      
           Stack(
             children: [
               SizedBox(
                 height: 280,
                 child: PageView.builder(
-                  itemCount: widget.car.image.length,
+                  itemCount: imageList.length,
                   onPageChanged: (i) {
                     setState(() => currentIndex = i);
                   },
                   itemBuilder: (context, index) {
                     return Image.network(
-                      widget.car.image[index],
+                      imageList[index],
                       width: double.infinity,
                       fit: BoxFit.cover,
                     );
                   },
                 ),
               ),
-
-              
               Positioned(
                 top: 40,
                 left: 12,
@@ -49,8 +52,6 @@ class _CarFeaturesState extends State<CarFeatures> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-
-            
               Positioned(
                 bottom: 12,
                 left: 0,
@@ -58,7 +59,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
-                    widget.car.image.length,
+                    imageList.length,
                     (index) => AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -76,19 +77,12 @@ class _CarFeaturesState extends State<CarFeatures> {
               ),
             ],
           ),
-
-      
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: Color(0xFF0F1B24),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                
                   Text(
                     widget.car.name,
                     style: const TextStyle(
@@ -102,10 +96,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                     widget.car.details,
                     style: const TextStyle(color: Colors.grey),
                   ),
-
                   const SizedBox(height: 20),
-
-          
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
@@ -116,9 +107,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                       _chip(Icons.people, "5 Seats"),
                     ],
                   ),
-
                   const SizedBox(height: 28),
-
                   const Text(
                     "Description",
                     style: TextStyle(
@@ -132,10 +121,7 @@ class _CarFeaturesState extends State<CarFeatures> {
                     widget.car.description,
                     style: const TextStyle(color: Colors.grey),
                   ),
-
                   const Spacer(),
-
-                
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -168,17 +154,27 @@ class _CarFeaturesState extends State<CarFeatures> {
                           ),
                         ),
                         onPressed: () {
-                          final user = UserService.getCurrentUser();
-                          if (user == null) return;
+                          final user =
+                              UserService.getCurrentUser();
+
+                          if (user == null) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                              const SnackBar(
+                                content: Text("Please login first"),
+                              ),
+                            );
+                            return;
+                          }
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => BookingPage(
                                 carName: widget.car.name,
-                                carImage: widget.car.image[0],
+                                carImage: imageList.first,
                                 carPrice: widget.car.price,
-                                userId: user.email,
+                                userId: user.id, 
                               ),
                             ),
                           );

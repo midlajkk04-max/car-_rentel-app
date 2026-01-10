@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive_project/favorite/view/favorite_page';
 import '../features/user/home/view/homepage.dart';
 import '../features/user/vehicle_search/view/vehicle_search_page.dart';
 import '../booking history/booking_historypage.dart';
-import '../favorite/view/favorite_page';
+
 import '../features/user/profile/view/profile.dart';
 import '../features/user/auth/service/user_service.dart';
 
@@ -20,24 +21,29 @@ class BottomBarState extends State<BottomBar> {
   late List<Widget> tabs;
 
   @override
-  void initState() {
-    super.initState();
-    final user = UserService.getCurrentUser();
-    userId = user!.email;
+void initState() {
+  super.initState();
 
-    tabs = [
-      HomePage(),
-      VehicleSearchPage(),
-      BookingHistoryPage(userId: userId),
-      FavoritesPage(),
-      Profile(),
-    ];
-  }
+  final user = UserService.getCurrentUser();
+  if (user == null) return;
+
+  tabs = [
+    HomePage(),
+    VehicleSearchPage(),
+    BookingHistoryPage(userId: user.id),
+    FavoritesPage(),
+    Profile(),
+  ];
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: indexNum, children: tabs),
+      body: IndexedStack(
+        index: indexNum,
+        children: tabs,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: indexNum,
         onTap: (i) => setState(() => indexNum = i),

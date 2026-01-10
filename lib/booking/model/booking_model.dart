@@ -1,11 +1,29 @@
+import 'package:hive/hive.dart';
+
+part 'booking_model.g.dart';
+
+@HiveType(typeId: 2) 
 class BookingModel {
+  @HiveField(0)
   final String userId;
+
+  @HiveField(1)
   final String carName;
+
+  @HiveField(2)
   final String carImage;
-  final String carPrice;
+
+  @HiveField(3)
+  final int carPrice;
+
+  @HiveField(4)
   final String bookingDate;
+
+  @HiveField(5)
   final int days;
-  final String totalAmount;
+
+  @HiveField(6)
+  final int totalAmount;
 
   BookingModel({
     required this.userId,
@@ -16,28 +34,4 @@ class BookingModel {
     required this.days,
     required this.totalAmount,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'carName': carName,
-      'carImage': carImage,
-      'carPrice': carPrice,
-      'bookingDate': bookingDate,
-      'days': days,
-      'totalAmount': totalAmount,
-    };
-  }
-
-  factory BookingModel.fromMap(Map<String, dynamic> map) {
-    return BookingModel(
-      userId: map['userId'] ?? '',
-      carName: map['carName'] ?? '',
-      carImage: map['carImage'] ?? '',
-      carPrice: map['carPrice'] ?? '',
-      bookingDate: map['bookingDate'] ?? '',
-      days: map['days'] ?? 0,
-      totalAmount: map['totalAmount'] ?? '',
-    );
-  }
 }
