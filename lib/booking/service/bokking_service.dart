@@ -7,7 +7,7 @@ class BookingService {
 
   static Future<bool> saveBooking(BookingModel booking) async {
     final exists = bookingBox.values.any(
-      (b) => b.userId == booking.userId && b.carName == booking.carName,
+      (b) => b.carName == booking.carName,
     );
     if (exists) return false;
 
@@ -15,14 +15,20 @@ class BookingService {
     return true;
   }
 
+  static bool isCarBooked(String carName) {
+    return bookingBox.values.any((b) => b.carName == carName);
+  }
+
   static List<BookingModel> getBookings(String userId) {
     return bookingBox.values.where((b) => b.userId == userId).toList();
   }
 
   static Future<void> deleteBooking(String userId, String carName) async {
-    final idx = bookingBox.values.toList().indexWhere(
-      (b) => b.userId == userId && b.carName == carName,
-    );
-    if (idx != -1) await bookingBox.deleteAt(idx);
+    final index = bookingBox.values.toList().indexWhere(
+          (b) => b.userId == userId && b.carName == carName,
+        );
+    if (index != -1) {
+      await bookingBox.deleteAt(index);
+    }
   }
 }

@@ -25,6 +25,12 @@ class BookingModel {
   @HiveField(6)
   final int totalAmount;
 
+  @HiveField(7)
+  final String startDate;
+
+  @HiveField(8)
+  final String endDate;
+
   BookingModel({
     required this.userId,
     required this.carName,
@@ -33,5 +39,7 @@ class BookingModel {
     required this.bookingDate,
     required this.days,
     required this.totalAmount,
+    required this.startDate,
+    required this.endDate,
   });
 }

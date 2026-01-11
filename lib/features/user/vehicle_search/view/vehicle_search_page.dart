@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:hive_project/booking/service/bokking_service.dart';
 import 'package:hive_project/core/constants/app_colors.dart';
 import 'package:hive_project/features/user/vehicle_search/model/car_card_model.dart';
 import 'package:hive_project/features/user/vehicle_search/widgets/car_card_widget.dart';
@@ -11,8 +13,8 @@ class VehicleSearchPage extends StatefulWidget {
 }
 
 class _VehicleSearchPageState extends State<VehicleSearchPage> {
-  int selectedIndex = 0;
   String searchQuery = '';
+  String selectedCategory = 'All';
 
   List<String> categories = ["All", "Luxury", "SUV", "Economy"];
 
@@ -22,9 +24,9 @@ class _VehicleSearchPageState extends State<VehicleSearchPage> {
   @override
   void initState() {
     super.initState();
-
+    
     carList = [
-      CarModel(
+       CarModel(
         image: [
           "https://www.shutterstock.com/image-photo/istanbul-turkey-may-2-2024-600nw-2457726547.jpg",
           "https://stimg.cardekho.com/images/carexteriorimages/930x620/BMW/5-Series/10182/1762506368495/front-grill---logo-98.jpg",
@@ -230,21 +232,23 @@ class _VehicleSearchPageState extends State<VehicleSearchPage> {
         description:
             "Skoda Kushaq is a modern SUV offering smooth handling, a premium interior, and a comfortable long-distance travel experience.",
       ),
+      
     ];
 
     filteredList = carList;
+    applyFilter();
   }
 
-  void filterFunction(String? category, String? search) {
+  void applyFilter() {
     setState(() {
       filteredList = carList.where((car) {
         final matchesCategory =
-            category == null || category == 'All' || car.category == category;
-        final matchesSearch =
-            search == null ||
-            search.isEmpty ||
-            car.name.toLowerCase().contains(search.toLowerCase());
-        return matchesCategory && matchesSearch;
+            selectedCategory == 'All' || car.category == selectedCategory;
+        final matchesSearch = searchQuery.isEmpty ||
+            car.name.toLowerCase().contains(searchQuery.toLowerCase());
+        final notBooked = !BookingService.isCarBooked(car.name);
+
+        return matchesCategory && matchesSearch && notBooked;
       }).toList();
     });
   }
@@ -252,75 +256,91 @@ class _VehicleSearchPageState extends State<VehicleSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Vehicle Search")),
       backgroundColor: AppColors.backGround,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search car...",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onChanged: (value) {
-                  searchQuery = value;
-                  filterFunction(categories[selectedIndex], searchQuery);
-                },
+      body: Column(
+        children: [
+          // 🔹 Search field
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: "Search car...",
+                border: OutlineInputBorder(),
+                isDense: true,
+                prefixIcon: Icon(Icons.search),
               ),
+              onChanged: (value) {
+                searchQuery = value;
+                applyFilter();
+              },
             ),
-            SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 7),
-                    child: ChoiceChip(
-                      label: Text(categories[index]),
-                      selected: selectedIndex == index,
-                      selectedColor: Colors.blue,
-                      backgroundColor: Colors.lightBlueAccent[600],
-                      labelStyle: TextStyle(
-                        color: selectedIndex == index
-                            ? Colors.white
-                            : Colors.white,
-                      ),
-                      onSelected: (_) {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                        filterFunction(categories[index], searchQuery);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
+          ),
 
-            Expanded(
-              child: filteredList.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No car found",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: filteredList.length,
-                      itemBuilder: (context, index) {
-                        final car = filteredList[index];
-                        return CarCardWidget(car: car);
-                        
-                      },
-                    ),
+          
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: categories.map((cat) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: ChoiceChip(
+                    label: Text(cat),
+                    selected: selectedCategory == cat,
+                    selectedColor: Colors.blue,
+                    backgroundColor: Colors.grey[300],
+                    labelStyle: TextStyle(
+                        color:
+                            selectedCategory == cat ? Colors.white : Colors.black),
+                    onSelected: (_) {
+                      selectedCategory = cat;
+                      applyFilter();
+                    },
+                  ),
+                );
+              }).toList(),
             ),
-          ],
-        ),
+          ),
+
+          const SizedBox(height: 8),
+
+        
+          Expanded(
+            child: filteredList.isEmpty
+                ? Center(
+                    child: Text(
+                      "No car found",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.zero, 
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      final car = filteredList[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width, 
+                          decoration: BoxDecoration(
+                            color: AppColors.backGround,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: CarCardWidget(car: car),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
