@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive_project/favorite/view/favorite_page';
-
+import 'package:hive_project/favorite/view/favorite_page.dart';
 import '../features/user/home/view/homepage.dart';
 import '../features/user/vehicle_search/view/vehicle_search_page.dart';
 import '../booking history/booking_historypage.dart';

@@ -348,10 +348,10 @@ packages:
     dependency: "direct main"
     description:
       name: horizontal_weekly_calendar
-      sha256: "7ea9e10de944819e280e67c11a8afc42e8fbb25d113a7e16de54cf516b2bcad6"
+      sha256: b2decd95d2fb6f90c30c268dbd253c24ee8ad22c3b97fca9e05002d3677155b5
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.5"
+    version: "1.2.7"
   http:
     dependency: transitive
     description:
